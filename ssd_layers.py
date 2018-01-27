@@ -3,7 +3,9 @@
 import keras.backend as K
 from keras.engine.topology import InputSpec
 from keras.engine.topology import Layer
+
 import numpy as np
+
 import tensorflow as tf
 
 
@@ -176,6 +178,6 @@ class PriorBox(Layer):
             pattern = [tf.shape(x)[0], 1, 1]
             prior_boxes_tensor = tf.tile(prior_boxes_tensor, pattern)
         elif K.backend() == 'theano':
-            #TODO
+            # TODO
             pass
         return prior_boxes_tensor

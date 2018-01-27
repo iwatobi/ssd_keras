@@ -8,13 +8,13 @@ from keras.layers import Flatten
 from keras.layers import GlobalAveragePooling2D
 from keras.layers import Input
 from keras.layers import MaxPooling2D
-from keras.layers.merge import concatenate
 from keras.layers import Reshape
 from keras.layers import ZeroPadding2D
+from keras.layers.merge import concatenate
 from keras.models import Model
 
-from ssd_layers import Normalize
-from ssd_layers import PriorBox
+from .ssd_layers import Normalize
+from .ssd_layers import PriorBox
 
 
 def SSD300(input_shape, num_classes=21):
@@ -34,109 +34,109 @@ def SSD300(input_shape, num_classes=21):
     img_size = (input_shape[1], input_shape[0])
     net['input'] = input_tensor
     net['conv1_1'] = Conv2D(64, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv1_1')(net['input'])
+                            activation='relu',
+                            padding='same',
+                            name='conv1_1')(net['input'])
     net['conv1_2'] = Conv2D(64, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv1_2')(net['conv1_1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv1_2')(net['conv1_1'])
     net['pool1'] = MaxPooling2D((2, 2), strides=(2, 2), padding='same',
                                 name='pool1')(net['conv1_2'])
     # Block 2
     net['conv2_1'] = Conv2D(128, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv2_1')(net['pool1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv2_1')(net['pool1'])
     net['conv2_2'] = Conv2D(128, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv2_2')(net['conv2_1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv2_2')(net['conv2_1'])
     net['pool2'] = MaxPooling2D((2, 2), strides=(2, 2), padding='same',
                                 name='pool2')(net['conv2_2'])
     # Block 3
     net['conv3_1'] = Conv2D(256, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv3_1')(net['pool2'])
+                            activation='relu',
+                            padding='same',
+                            name='conv3_1')(net['pool2'])
     net['conv3_2'] = Conv2D(256, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv3_2')(net['conv3_1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv3_2')(net['conv3_1'])
     net['conv3_3'] = Conv2D(256, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv3_3')(net['conv3_2'])
+                            activation='relu',
+                            padding='same',
+                            name='conv3_3')(net['conv3_2'])
     net['pool3'] = MaxPooling2D((2, 2), strides=(2, 2), padding='same',
                                 name='pool3')(net['conv3_3'])
     # Block 4
     net['conv4_1'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv4_1')(net['pool3'])
+                            activation='relu',
+                            padding='same',
+                            name='conv4_1')(net['pool3'])
     net['conv4_2'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv4_2')(net['conv4_1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv4_2')(net['conv4_1'])
     net['conv4_3'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv4_3')(net['conv4_2'])
+                            activation='relu',
+                            padding='same',
+                            name='conv4_3')(net['conv4_2'])
     net['pool4'] = MaxPooling2D((2, 2), strides=(2, 2), padding='same',
                                 name='pool4')(net['conv4_3'])
     # Block 5
     net['conv5_1'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv5_1')(net['pool4'])
+                            activation='relu',
+                            padding='same',
+                            name='conv5_1')(net['pool4'])
     net['conv5_2'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv5_2')(net['conv5_1'])
+                            activation='relu',
+                            padding='same',
+                            name='conv5_2')(net['conv5_1'])
     net['conv5_3'] = Conv2D(512, (3, 3),
-                                   activation='relu',
-                                   padding='same',
-                                   name='conv5_3')(net['conv5_2'])
+                            activation='relu',
+                            padding='same',
+                            name='conv5_3')(net['conv5_2'])
     net['pool5'] = MaxPooling2D((3, 3), strides=(1, 1), padding='same',
                                 name='pool5')(net['conv5_3'])
     # FC6
     net['fc6'] = Conv2D(1024, (3, 3), dilation_rate=(6, 6),
-                                     activation='relu', padding='same',
-                                     name='fc6')(net['pool5'])
+                        activation='relu', padding='same',
+                        name='fc6')(net['pool5'])
     # x = Dropout(0.5, name='drop6')(x)
     # FC7
     net['fc7'] = Conv2D(1024, (1, 1), activation='relu',
-                               padding='same', name='fc7')(net['fc6'])
+                        padding='same', name='fc7')(net['fc6'])
     # x = Dropout(0.5, name='drop7')(x)
     # Block 6
     net['conv6_1'] = Conv2D(256, (1, 1), activation='relu',
-                                   padding='same',
-                                   name='conv6_1')(net['fc7'])
+                            padding='same',
+                            name='conv6_1')(net['fc7'])
     net['conv6_2'] = Conv2D(512, (3, 3), strides=(2, 2),
-                                   activation='relu', padding='same',
-                                   name='conv6_2')(net['conv6_1'])
+                            activation='relu', padding='same',
+                            name='conv6_2')(net['conv6_1'])
     # Block 7
     net['conv7_1'] = Conv2D(128, (1, 1), activation='relu',
-                                   padding='same',
-                                   name='conv7_1')(net['conv6_2'])
+                            padding='same',
+                            name='conv7_1')(net['conv6_2'])
     net['conv7_2'] = ZeroPadding2D()(net['conv7_1'])
     net['conv7_2'] = Conv2D(256, (3, 3), strides=(2, 2),
-                                   activation='relu', padding='valid',
-                                   name='conv7_2')(net['conv7_2'])
+                            activation='relu', padding='valid',
+                            name='conv7_2')(net['conv7_2'])
     # Block 8
     net['conv8_1'] = Conv2D(128, (1, 1), activation='relu',
-                                   padding='same',
-                                   name='conv8_1')(net['conv7_2'])
+                            padding='same',
+                            name='conv8_1')(net['conv7_2'])
     net['conv8_2'] = Conv2D(256, (3, 3), strides=(2, 2),
-                                   activation='relu', padding='same',
-                                   name='conv8_2')(net['conv8_1'])
+                            activation='relu', padding='same',
+                            name='conv8_2')(net['conv8_1'])
     # Last Pool
     net['pool6'] = GlobalAveragePooling2D(name='pool6')(net['conv8_2'])
     # Prediction from conv4_3
     net['conv4_3_norm'] = Normalize(20, name='conv4_3_norm')(net['conv4_3'])
     num_priors = 3
     x = Conv2D(num_priors * 4, (3, 3), padding='same',
-                      name='conv4_3_norm_mbox_loc')(net['conv4_3_norm'])
+               name='conv4_3_norm_mbox_loc')(net['conv4_3_norm'])
     net['conv4_3_norm_mbox_loc'] = x
     flatten = Flatten(name='conv4_3_norm_mbox_loc_flat')
     net['conv4_3_norm_mbox_loc_flat'] = flatten(net['conv4_3_norm_mbox_loc'])
@@ -144,7 +144,7 @@ def SSD300(input_shape, num_classes=21):
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     x = Conv2D(num_priors * num_classes, (3, 3), padding='same',
-                      name=name)(net['conv4_3_norm'])
+               name=name)(net['conv4_3_norm'])
     net['conv4_3_norm_mbox_conf'] = x
     flatten = Flatten(name='conv4_3_norm_mbox_conf_flat')
     net['conv4_3_norm_mbox_conf_flat'] = flatten(net['conv4_3_norm_mbox_conf'])
@@ -155,16 +155,16 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from fc7
     num_priors = 6
     net['fc7_mbox_loc'] = Conv2D(num_priors * 4, (3, 3),
-                                        padding='same',
-                                        name='fc7_mbox_loc')(net['fc7'])
+                                 padding='same',
+                                 name='fc7_mbox_loc')(net['fc7'])
     flatten = Flatten(name='fc7_mbox_loc_flat')
     net['fc7_mbox_loc_flat'] = flatten(net['fc7_mbox_loc'])
     name = 'fc7_mbox_conf'
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     net['fc7_mbox_conf'] = Conv2D(num_priors * num_classes, (3, 3),
-                                         padding='same',
-                                         name=name)(net['fc7'])
+                                  padding='same',
+                                  name=name)(net['fc7'])
     flatten = Flatten(name='fc7_mbox_conf_flat')
     net['fc7_mbox_conf_flat'] = flatten(net['fc7_mbox_conf'])
     priorbox = PriorBox(img_size, 60.0, max_size=114.0, aspect_ratios=[2, 3],
@@ -174,7 +174,7 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from conv6_2
     num_priors = 6
     x = Conv2D(num_priors * 4, (3, 3), padding='same',
-                      name='conv6_2_mbox_loc')(net['conv6_2'])
+               name='conv6_2_mbox_loc')(net['conv6_2'])
     net['conv6_2_mbox_loc'] = x
     flatten = Flatten(name='conv6_2_mbox_loc_flat')
     net['conv6_2_mbox_loc_flat'] = flatten(net['conv6_2_mbox_loc'])
@@ -182,7 +182,7 @@ def SSD300(input_shape, num_classes=21):
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     x = Conv2D(num_priors * num_classes, (3, 3), padding='same',
-                      name=name)(net['conv6_2'])
+               name=name)(net['conv6_2'])
     net['conv6_2_mbox_conf'] = x
     flatten = Flatten(name='conv6_2_mbox_conf_flat')
     net['conv6_2_mbox_conf_flat'] = flatten(net['conv6_2_mbox_conf'])
@@ -193,7 +193,7 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from conv7_2
     num_priors = 6
     x = Conv2D(num_priors * 4, (3, 3), padding='same',
-                      name='conv7_2_mbox_loc')(net['conv7_2'])
+               name='conv7_2_mbox_loc')(net['conv7_2'])
     net['conv7_2_mbox_loc'] = x
     flatten = Flatten(name='conv7_2_mbox_loc_flat')
     net['conv7_2_mbox_loc_flat'] = flatten(net['conv7_2_mbox_loc'])
@@ -201,7 +201,7 @@ def SSD300(input_shape, num_classes=21):
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     x = Conv2D(num_priors * num_classes, (3, 3), padding='same',
-                      name=name)(net['conv7_2'])
+               name=name)(net['conv7_2'])
     net['conv7_2_mbox_conf'] = x
     flatten = Flatten(name='conv7_2_mbox_conf_flat')
     net['conv7_2_mbox_conf_flat'] = flatten(net['conv7_2_mbox_conf'])
@@ -212,7 +212,7 @@ def SSD300(input_shape, num_classes=21):
     # Prediction from conv8_2
     num_priors = 6
     x = Conv2D(num_priors * 4, (3, 3), padding='same',
-                      name='conv8_2_mbox_loc')(net['conv8_2'])
+               name='conv8_2_mbox_loc')(net['conv8_2'])
     net['conv8_2_mbox_loc'] = x
     flatten = Flatten(name='conv8_2_mbox_loc_flat')
     net['conv8_2_mbox_loc_flat'] = flatten(net['conv8_2_mbox_loc'])
@@ -220,7 +220,7 @@ def SSD300(input_shape, num_classes=21):
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     x = Conv2D(num_priors * num_classes, (3, 3), padding='same',
-                      name=name)(net['conv8_2'])
+               name=name)(net['conv8_2'])
     net['conv8_2_mbox_conf'] = x
     flatten = Flatten(name='conv8_2_mbox_conf_flat')
     net['conv8_2_mbox_conf_flat'] = flatten(net['conv8_2_mbox_conf'])
@@ -261,15 +261,15 @@ def SSD300(input_shape, num_classes=21):
                                     net['conv7_2_mbox_conf_flat'],
                                     net['conv8_2_mbox_conf_flat'],
                                     net['pool6_mbox_conf_flat']],
-                                axis=1, name='mbox_conf')
+                                   axis=1, name='mbox_conf')
     net['mbox_priorbox'] = concatenate([net['conv4_3_norm_mbox_priorbox'],
                                         net['fc7_mbox_priorbox'],
                                         net['conv6_2_mbox_priorbox'],
                                         net['conv7_2_mbox_priorbox'],
                                         net['conv8_2_mbox_priorbox'],
                                         net['pool6_mbox_priorbox']],
-                                        axis=1,
-                                        name='mbox_priorbox')
+                                       axis=1,
+                                       name='mbox_priorbox')
     if hasattr(net['mbox_loc'], '_keras_shape'):
         num_boxes = net['mbox_loc']._keras_shape[-1] // 4
     elif hasattr(net['mbox_loc'], 'int_shape'):
@@ -283,7 +283,7 @@ def SSD300(input_shape, num_classes=21):
     net['predictions'] = concatenate([net['mbox_loc'],
                                       net['mbox_conf'],
                                       net['mbox_priorbox']],
-                                      axis=2,
-                                      name='predictions')
+                                     axis=2,
+                                     name='predictions')
     model = Model(net['input'], net['predictions'])
     return model

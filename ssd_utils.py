@@ -1,6 +1,7 @@
 """Some utils for SSD."""
 
 import numpy as np
+
 import tensorflow as tf
 
 
